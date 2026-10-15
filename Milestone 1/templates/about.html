@@ -1,0 +1,416 @@
+{% extends 'base.html' %}
+
+{% block title %}About | EventOps AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-shell {
+        padding: 32px 0 56px;
+        background: radial-gradient(circle at top left, rgba(79, 70, 229, 0.10), transparent 30%),
+                    radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.12), transparent 25%),
+                    #f8faff;
+    }
+
+    .premium-hero {
+        padding: 18px 0 40px;
+    }
+
+    .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(79, 70, 229, 0.08);
+        color: #312e81;
+        border: 1px solid rgba(79, 70, 229, 0.14);
+        border-radius: 999px;
+        padding: 10px 18px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        backdrop-filter: blur(8px);
+    }
+
+    .premium-title {
+        font-size: clamp(2.6rem, 5vw, 5rem);
+        line-height: 1.02;
+        letter-spacing: -0.06em;
+        font-weight: 800;
+        margin-top: 18px;
+        margin-bottom: 22px;
+        color: #111827;
+        transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
+        text-shadow: 0 0 0 rgba(37, 99, 235, 0);
+    }
+
+    .premium-title:hover,
+    .premium-title:focus-visible {
+        color: #4f46e5;
+        text-shadow: 0 10px 30px rgba(79, 70, 229, 0.18);
+        transform: translateX(2px);
+    }
+
+    .premium-text {
+        font-size: 1.12rem;
+        line-height: 1.8;
+        color: #4b5563;
+        max-width: 620px;
+    }
+
+    .premium-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-top: 28px;
+    }
+
+    .btn-premium-primary,
+    .btn-premium-secondary {
+        border-radius: 14px;
+        padding: 14px 22px;
+        font-weight: 600;
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .btn-premium-primary {
+        background: linear-gradient(135deg, #2563eb, #7c3aed);
+        border: none;
+        box-shadow: 0 18px 35px rgba(79, 70, 229, 0.25);
+    }
+
+    .btn-premium-primary:hover,
+    .btn-premium-secondary:hover,
+    .feature-card:hover,
+    .insight-card:hover,
+    .highlight-panel:hover {
+        transform: translateY(-4px);
+    }
+
+    .btn-premium-secondary {
+        background: rgba(255,255,255,0.7);
+        border: 1px solid rgba(148, 163, 184, 0.45);
+        color: #111827;
+    }
+
+    .hero-visual {
+        position: relative;
+        min-height: 560px;
+    }
+
+    .image-panel {
+        position: absolute;
+        inset: 0 0 0 18%;
+        border-radius: 32px;
+        overflow: hidden;
+        box-shadow: 0 30px 70px rgba(15, 23, 42, 0.18);
+        border: 1px solid rgba(255,255,255,0.4);
+        transform: rotate(2deg);
+        transition: transform 0.3s ease;
+    }
+
+    .image-panel:hover {
+        transform: rotate(0deg) scale(1.01);
+    }
+
+    .image-panel img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        filter: saturate(1.1) contrast(1.02);
+    }
+
+    .floating-badge {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(148,163,184,0.2);
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+        backdrop-filter: blur(8px);
+        border-radius: 18px;
+        padding: 16px 18px;
+        animation: floatCard 4s ease-in-out infinite;
+    }
+
+    .floating-badge.primary {
+        left: 0;
+        bottom: 52px;
+    }
+
+    .floating-badge.secondary {
+        right: 24px;
+        top: 40px;
+        animation-delay: 1s;
+    }
+
+    .floating-badge .metric {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .floating-badge small {
+        color: #475569;
+        letter-spacing: 0.02em;
+    }
+
+    @keyframes floatCard {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-12px); }
+    }
+
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 22px;
+        margin-top: 18px;
+    }
+
+    .feature-card,
+    .insight-card,
+    .highlight-panel {
+        background: rgba(255,255,255,0.8);
+        border: 1px solid rgba(148,163,184,0.2);
+        border-radius: 26px;
+        padding: 28px 24px;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.05);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .feature-card:hover,
+    .insight-card:hover,
+    .highlight-panel:hover {
+        box-shadow: 0 28px 60px rgba(59, 130, 246, 0.12);
+    }
+
+    .feature-icon {
+        width: 62px;
+        height: 62px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 18px;
+        font-size: 1.6rem;
+        margin-bottom: 18px;
+    }
+
+    .feature-card h4,
+    .insight-card h3,
+    .highlight-panel h3 {
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 12px;
+    }
+
+    .feature-card p,
+    .insight-card p,
+    .highlight-panel p,
+    .check-list li {
+        color: #4b5563;
+        line-height: 1.7;
+    }
+
+    .text-purple {
+        color: #7c3aed !important;
+    }
+
+    .bg-purple-subtle {
+        background: rgba(124, 58, 237, 0.12) !important;
+    }
+
+    .split-section {
+        margin-top: 26px;
+    }
+
+    .check-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 12px;
+    }
+
+    .check-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-weight: 500;
+    }
+
+    .progress-wrap {
+        display: grid;
+        gap: 18px;
+        margin-top: 18px;
+    }
+
+    .progress-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.92rem;
+        color: #334155;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    .progress {
+        height: 12px;
+        border-radius: 999px;
+        background: rgba(148,163,184,0.12);
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        border-radius: 999px;
+        box-shadow: inset 0 0 0 rgba(0,0,0,0);
+    }
+
+    .bottom-cta {
+        margin-top: 12px;
+        text-align: center;
+        padding: 24px 0 8px;
+    }
+
+    .bottom-cta h3 {
+        font-size: clamp(1.8rem, 3vw, 2.7rem);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        color: #111827;
+        margin-bottom: 12px;
+    }
+
+    @media (max-width: 991.98px) {
+        .feature-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .hero-visual {
+            min-height: 420px;
+            margin-top: 18px;
+        }
+
+        .image-panel {
+            inset: 0 8% 0 8%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="about-shell">
+    <div class="container premium-hero">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <div class="eyebrow">
+                    <i class="bi bi-robot"></i>
+                    Agentic AI for Event Operations
+                </div>
+                <h1 class="premium-title">Redefining Event Management with Agentic AI</h1>
+                <p class="premium-text">
+                    EventOps AI is an intelligent event management platform designed to simplify and coordinate event operations through specialized AI agents. From attendee registration and venue planning to speaker coordination, sponsorship tracking, and incident management, the platform brings essential workflows together in one unified system.
+                </p>
+
+                <div class="premium-actions">
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-premium-primary">
+                        <i class="bi bi-person-plus me-2"></i>Get Started
+                    </a>
+                    <a href="{{ url_for('contact') }}" class="btn btn-premium-secondary">
+                        <i class="bi bi-envelope me-2"></i>Contact Us
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="hero-visual">
+                    <div class="image-panel">
+                        <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=900&q=80" alt="Event planning with AI" />
+                    </div>
+                    <div class="floating-badge primary">
+                        <span class="metric">24/7</span>
+                        <small>Event support</small>
+                    </div>
+                    <div class="floating-badge secondary">
+                        <span class="metric">5+</span>
+                        <small>AI agents</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <section class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon bg-primary-subtle text-primary">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <h4>Smart Registrations</h4>
+                <p>Manage attendee signups, ticketing, and check-in workflows automatically with real-time intelligence.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon bg-success-subtle text-success">
+                    <i class="bi bi-building-fill-check"></i>
+                </div>
+                <h4>Venue Intelligence</h4>
+                <p>Track capacity, utilization, and room readiness to keep every event space operating efficiently.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon bg-warning-subtle text-warning">
+                    <i class="bi bi-mic-fill"></i>
+                </div>
+                <h4>Speaker Coordination</h4>
+                <p>Align schedules, session planning, and speaker logistics with a single, connected system.</p>
+            </div>
+        </section>
+
+        <section class="split-section row align-items-center g-4 mb-5">
+            <div class="col-lg-6">
+                <div class="highlight-panel h-100">
+                    <h3>Built for modern event teams</h3>
+                    <p>
+                        EventOps AI helps teams move faster and plan smarter by connecting operational intelligence with day-of coordination. It centralizes essential event information, reduces manual effort, and simplifies real-time decision making.
+                    </p>
+                    <ul class="check-list">
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Automated reminders and notifications</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Unified incident visibility and tracking</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Real-time sponsorship performance monitoring</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>AI-powered event assistance for every query</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="insight-card h-100">
+                    <h3>Why it matters</h3>
+                    <p>
+                        Planning successful events requires a balance of logistics, timing, communication, and decision-making. EventOps AI brings those moving parts together in one platform to deliver polished experiences and better operational outcomes.
+                    </p>
+
+                    <div class="progress-wrap">
+                        <div>
+                            <div class="progress-label"><span>Operations Efficiency</span><span>92%</span></div>
+                            <div class="progress"><div class="progress-bar bg-primary" style="width: 92%;"></div></div>
+                        </div>
+                        <div>
+                            <div class="progress-label"><span>Automation Coverage</span><span>88%</span></div>
+                            <div class="progress"><div class="progress-bar bg-success" style="width: 88%;"></div></div>
+                        </div>
+                        <div>
+                            <div class="progress-label"><span>Response Speed</span><span>95%</span></div>
+                            <div class="progress"><div class="progress-bar bg-warning" style="width: 95%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bottom-cta">
+            <h3>Transforming every stage of the event lifecycle</h3>
+            <p class="premium-text mx-auto mb-0" style="max-width: 760px;">
+                From the first registration to the final post-event review, EventOps AI supports the full journey with coordinated workflows, actionable insight, and intelligent automation.
+            </p>
+        </section>
+    </div>
+</div>
+{% endblock %}
