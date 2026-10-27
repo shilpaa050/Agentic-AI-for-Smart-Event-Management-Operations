@@ -1,0 +1,406 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact | EventOps AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-page {
+        --contact-ink: #172331;
+        --contact-muted: #647381;
+        --contact-teal: #087e78;
+        --contact-coral: #e48c6a;
+        background:
+            radial-gradient(ellipse at 7% 5%, rgba(8, 126, 120, 0.10), transparent 30%),
+            radial-gradient(ellipse at 96% 85%, rgba(228, 140, 106, 0.12), transparent 27%),
+            #f6f8f7;
+        color: var(--contact-ink);
+        min-height: 75vh;
+        padding: clamp(28px, 5vw, 72px) 0;
+    }
+
+    .contact-heading {
+        max-width: 780px;
+        margin: 0 auto 42px;
+        text-align: center;
+        animation: contact-arrive 650ms ease both;
+    }
+
+    .contact-kicker {
+        color: var(--contact-teal);
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    .contact-heading h1 {
+        color: var(--contact-ink);
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: clamp(2.5rem, 5vw, 4.4rem);
+        font-weight: 500;
+        line-height: 1.06;
+        margin: 14px 0 16px;
+        transition: color 250ms ease;
+    }
+
+    .contact-heading h1:hover {
+        color: var(--contact-teal);
+    }
+
+    .contact-brand {
+        color: var(--contact-teal);
+        display: inline-block;
+        transition: color 250ms ease, text-shadow 250ms ease;
+    }
+
+    .contact-heading h1:hover .contact-brand {
+        color: #0a625e;
+        text-shadow: 0 8px 24px rgba(8, 126, 120, 0.18);
+    }
+
+    .contact-heading p {
+        color: var(--contact-muted);
+        font-size: 1.05rem;
+        line-height: 1.75;
+        margin: 0 auto;
+        max-width: 620px;
+    }
+
+    .contact-layout {
+        align-items: stretch;
+        display: grid;
+        gap: 24px;
+        grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+        margin: 0 auto;
+        max-width: 1120px;
+    }
+
+    .contact-form-panel {
+        animation: contact-arrive 700ms 100ms ease both;
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(23, 35, 49, 0.08);
+        border-radius: 8px;
+        box-shadow: 0 24px 70px rgba(31, 53, 59, 0.09);
+        padding: clamp(24px, 4vw, 44px);
+    }
+
+    .contact-form-panel h2 {
+        font-size: 1.35rem;
+        font-weight: 700;
+        margin-bottom: 7px;
+    }
+
+    .contact-form-panel > p {
+        color: var(--contact-muted);
+        margin-bottom: 28px;
+    }
+
+    .contact-form-panel label {
+        color: #344451;
+        display: block;
+        font-size: 0.88rem;
+        font-weight: 650;
+        margin-bottom: 8px;
+    }
+
+    .contact-form-panel .form-control {
+        background: #fbfcfc;
+        border: 1px solid #dce4e3;
+        border-radius: 5px;
+        min-height: 50px;
+        padding: 12px 14px;
+        transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .contact-form-panel textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .contact-form-panel .form-control:focus {
+        background: #fff;
+        border-color: var(--contact-teal);
+        box-shadow: 0 0 0 4px rgba(8, 126, 120, 0.12);
+    }
+
+    .contact-submit {
+        align-items: center;
+        background: var(--contact-ink);
+        border: 1px solid var(--contact-ink);
+        border-radius: 5px;
+        color: #fff;
+        display: inline-flex;
+        font-weight: 650;
+        gap: 12px;
+        justify-content: center;
+        min-height: 50px;
+        padding: 12px 22px;
+        transition: background 200ms ease, border-color 200ms ease, transform 200ms ease;
+    }
+
+    .contact-submit:hover {
+        background: var(--contact-teal);
+        border-color: var(--contact-teal);
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    .contact-visual {
+        animation: contact-arrive 700ms 180ms ease both;
+        background: #173e42;
+        border-radius: 8px;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        min-height: 100%;
+        overflow: hidden;
+        padding: clamp(25px, 4vw, 40px);
+        position: relative;
+        isolation: isolate;
+    }
+
+    .contact-visual::before {
+        background-image: url('https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1200&q=85');
+        background-position: center;
+        background-size: cover;
+        content: '';
+        inset: 0;
+        position: absolute;
+        transition: transform 700ms ease;
+        z-index: -2;
+    }
+
+    .contact-visual::after {
+        background: linear-gradient(180deg, rgba(11, 28, 33, 0.08) 8%, rgba(11, 28, 33, 0.38) 42%, rgba(11, 28, 33, 0.94) 100%);
+        content: '';
+        inset: 0;
+        position: absolute;
+        z-index: -1;
+    }
+
+    .contact-visual:hover::before {
+        transform: scale(1.045);
+    }
+
+    .visual-label {
+        align-items: center;
+        align-self: flex-start;
+        background: rgba(255, 255, 255, 0.14);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 999px;
+        display: inline-flex;
+        font-size: 0.78rem;
+        gap: 8px;
+        margin-bottom: auto;
+        padding: 9px 13px;
+        backdrop-filter: blur(8px);
+    }
+
+    .contact-visual h2 {
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: clamp(1.8rem, 3vw, 2.6rem);
+        font-weight: 500;
+        line-height: 1.15;
+        margin-bottom: 12px;
+        max-width: 370px;
+    }
+
+    .contact-visual p {
+        color: rgba(255, 255, 255, 0.82);
+        line-height: 1.7;
+        margin: 0;
+        max-width: 390px;
+    }
+
+    .contact-note {
+        border-top: 1px solid rgba(255, 255, 255, 0.28);
+        color: rgba(255, 255, 255, 0.88);
+        font-size: 0.88rem;
+        margin-top: 25px;
+        padding-top: 18px;
+    }
+
+    .contact-details {
+        border-top: 1px solid rgba(255, 255, 255, 0.28);
+        display: grid;
+        gap: 14px;
+        margin-top: 22px;
+        padding-top: 20px;
+    }
+
+    .contact-detail {
+        align-items: flex-start;
+        color: rgba(255, 255, 255, 0.82);
+        display: flex;
+        gap: 12px;
+        line-height: 1.5;
+    }
+
+    .contact-detail i {
+        color: #a9e2d8;
+        margin-top: 3px;
+    }
+
+    .contact-detail strong,
+    .contact-detail a {
+        color: #fff;
+        display: block;
+    }
+
+    .contact-detail a {
+        text-decoration-color: rgba(255, 255, 255, 0.45);
+        text-underline-offset: 3px;
+    }
+
+    .contact-detail a:hover {
+        color: #a9e2d8;
+    }
+
+    .contact-socials {
+        border-top: 1px solid rgba(255, 255, 255, 0.28);
+        margin-top: 20px;
+        padding-top: 18px;
+    }
+
+    .contact-socials-label {
+        color: rgba(255, 255, 255, 0.76);
+        display: block;
+        font-size: 0.78rem;
+        margin-bottom: 11px;
+    }
+
+    .contact-social-links {
+        display: flex;
+        gap: 10px;
+    }
+
+    .contact-social-links a {
+        align-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        border-radius: 50%;
+        color: #fff;
+        display: inline-flex;
+        height: 40px;
+        justify-content: center;
+        text-decoration: none;
+        transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+        width: 40px;
+    }
+
+    .contact-social-links a:hover,
+    .contact-social-links a:focus-visible {
+        background: rgba(255, 255, 255, 0.16);
+        border-color: #a9e2d8;
+        color: #a9e2d8;
+        transform: translateY(-2px);
+    }
+
+    @keyframes contact-arrive {
+        from { opacity: 0; transform: translateY(14px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 767.98px) {
+        .contact-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .contact-visual {
+            min-height: 360px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .contact-page *,
+        .contact-page *::before,
+        .contact-page *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            scroll-behavior: auto !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="contact-page">
+    <div class="container">
+        <header class="contact-heading">
+            <span class="contact-kicker"><i class="bi bi-chat-square-text"></i> Let’s connect</span>
+            <h1>Contact <span class="contact-brand">EventOps AI</span></h1>
+        </header>
+
+        <div class="contact-layout">
+            <section class="contact-form-panel" aria-labelledby="contact-form-title">
+                <h2 id="contact-form-title">Send our team a message</h2>
+                <p>Share a few details and we’ll take it from there.</p>
+                <form method="post" action="{{ url_for('contact') }}">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="contact-name">Your name</label>
+                            <input class="form-control" id="contact-name" name="name" type="text" autocomplete="name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="contact-email">Email address</label>
+                            <input class="form-control" id="contact-email" name="email" type="email" autocomplete="email" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="contact-subject">What can we help with?</label>
+                            <input class="form-control" id="contact-subject" name="subject" type="text" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="contact-message">Your message</label>
+                            <textarea class="form-control" id="contact-message" name="message" rows="5" required></textarea>
+                        </div>
+                        <div class="col-12 pt-2">
+                            <button class="contact-submit" type="submit">
+                                Send message <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+            <aside class="contact-visual" aria-label="Event team collaborating">
+                <span class="visual-label"><i class="bi bi-stars" aria-hidden="true"></i> Event operations, thoughtfully connected</span>
+                <h2>One clear conversation can move your event forward.</h2>
+                <p>From a first idea to the details behind event day, EventOps AI brings the moving parts into focus.</p>
+                <div class="contact-details" aria-label="Sample contact channels">
+                    <div class="contact-detail">
+                        <i class="bi bi-envelope" aria-hidden="true"></i>
+                        <div><strong>General inquiries</strong><a href="mailto:hello@eventops.example">hello@eventops.example</a></div>
+                    </div>
+                    <div class="contact-detail">
+                        <i class="bi bi-headset" aria-hidden="true"></i>
+                        <div><strong>Event support</strong><a href="mailto:support@eventops.example">support@eventops.example</a></div>
+                    </div>
+                    <div class="contact-detail">
+                        <i class="bi bi-geo-alt" aria-hidden="true"></i>
+                        <div><strong>Office</strong><span>123 Event Avenue, San Francisco, CA 94105</span></div>
+                    </div>
+                </div>
+                <div class="contact-socials" aria-label="Social media links">
+                    <span class="contact-socials-label">Social profiles</span>
+                    <div class="contact-social-links">
+                        <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn sample link" title="LinkedIn">
+                            <i class="bi bi-linkedin" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram sample link" title="Instagram">
+                            <i class="bi bi-instagram" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="X sample link" title="X">
+                            <i class="bi bi-twitter-x" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="contact-note"><i class="bi bi-clock me-2" aria-hidden="true"></i>Sample details; replies are typically sent within one business day.</div>
+            </aside>
+        </div>
+    </div>
+</div>
+{% endblock %}

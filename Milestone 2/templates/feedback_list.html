@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}My Feedback — EventOps AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .feedback-list-wrapper {
+        min-height: 80vh;
+        background: linear-gradient(145deg, #f0f4ff 0%, #e6edf7 100%);
+        padding: 2rem 0;
+    }
+    .feedback-list-card {
+        border: none;
+        border-radius: 1.5rem;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 20px 60px rgba(13, 110, 253, 0.12);
+    }
+    .feedback-list-card .card-header {
+        background: linear-gradient(135deg, #0d6efd, #6610f2);
+        color: white;
+        padding: 1.5rem 2rem;
+        border: none;
+        border-radius: 1.5rem 1.5rem 0 0;
+    }
+    .feedback-entry {
+        border: 1px solid #e9ecef;
+        border-radius: 1rem;
+        padding: 1.25rem;
+    }
+    .feedback-rating {
+        color: #f0ad00;
+        letter-spacing: 0.1rem;
+        white-space: nowrap;
+    }
+    @media (max-width: 576px) {
+        .feedback-list-card .card-header { padding: 1.25rem; }
+        .feedback-entry { padding: 1rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="feedback-list-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="card feedback-list-card">
+                    <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-3">
+                        <div>
+                            <h1 class="h3 mb-1"><i class="bi bi-star me-2"></i>My Feedback</h1>
+                            <p class="mb-0">Review and update your event ratings.</p>
+                        </div>
+                        <span class="badge bg-light text-primary rounded-pill">
+                            {{ feedbacks|length }} submission{% if feedbacks|length != 1 %}s{% endif %}
+                        </span>
+                    </div>
+                    <div class="card-body p-4">
+                        {% if feedbacks %}
+                            <div class="d-flex flex-column gap-3">
+                                {% for feedback in feedbacks %}
+                                    <article class="feedback-entry">
+                                        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+                                            <div>
+                                                {% if feedback.event %}
+                                                    <h2 class="h5 mb-1">
+                                                        <a class="text-decoration-none" href="{{ url_for('event_detail', event_id=feedback.event.id) }}">
+                                                            {{ feedback.event.title }}
+                                                        </a>
+                                                    </h2>
+                                                    <p class="text-muted small mb-2">
+                                                        {{ feedback.event.date }}{% if feedback.event.time %} at {{ feedback.event.time }}{% endif %}
+                                                        {% if feedback.event.location %} · {{ feedback.event.location }}{% endif %}
+                                                    </p>
+                                                {% else %}
+                                                    <h2 class="h5 mb-1">Event no longer available</h2>
+                                                {% endif %}
+                                                <div class="feedback-rating" aria-label="{{ feedback.rating }} out of 5 stars">
+                                                    {% for star in range(1, 6) %}{% if star <= feedback.rating %}★{% else %}☆{% endif %}{% endfor %}
+                                                    <span class="text-muted small ms-1">{{ feedback.rating }}/5</span>
+                                                </div>
+                                            </div>
+                                            {% if feedback.event %}
+                                                <a class="btn btn-outline-primary btn-sm" href="{{ url_for('feedback', event_id=feedback.event.id) }}">
+                                                    <i class="bi bi-pencil me-1"></i> Edit feedback
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                        {% if feedback.comment %}
+                                            <p class="mb-0 mt-3 text-break">{{ feedback.comment }}</p>
+                                        {% else %}
+                                            <p class="mb-0 mt-3 text-muted fst-italic">No comment provided.</p>
+                                        {% endif %}
+                                        {% if feedback.created_at %}
+                                            <p class="text-muted small mb-0 mt-3">Submitted {{ feedback.created_at.strftime('%b %d, %Y') }}</p>
+                                        {% endif %}
+                                    </article>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="bi bi-chat-square-heart display-4 text-primary"></i>
+                                <h2 class="h4 mt-3">No feedback yet</h2>
+                                <p class="text-muted">After attending an event, come back here to share your experience.</p>
+                                <a class="btn btn-primary rounded-pill px-4" href="{{ url_for('browse_events') }}">
+                                    <i class="bi bi-calendar-event me-1"></i> Browse events
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
